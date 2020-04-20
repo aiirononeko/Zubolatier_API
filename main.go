@@ -8,6 +8,7 @@ import (
 
 	firebase "firebase.google.com/go"
 	"github.com/labstack/echo"
+	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
 
@@ -31,13 +32,26 @@ func main() {
 	e := echo.New()
 
 	// ルーティング設定
-	e.GET("/hello", hello)
+	e.GET("/all", func(c echo.Context) error {
+
+		// 全レコード取得
+		iter := client.Collection("recipes").Documents(ctx)
+		var res interface{}
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				log.Fatalf("Failed to iterate: %v", err)
+			}
+			res = doc.Data()
+		}
+
+		return c.JSON(http.StatusOK, res)
+	})
 
 	// サーバー起動
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 
-}
-
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "hello!")
 }
