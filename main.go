@@ -11,7 +11,6 @@ import (
 
 	firebase "firebase.google.com/go"
 	"github.com/labstack/echo"
-	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 )
 
@@ -20,6 +19,7 @@ func main() {
 	// Cloud FireStoreの初期化
 	ctx := context.Background()
 	sa := option.WithCredentialsFile("path/to/serviceAccount.json")
+
 	app, err := firebase.NewApp(ctx, nil, sa)
 	if err != nil {
 		log.Fatalln(err)
@@ -29,6 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	defer client.Close()
 
 	// サーバーのインスタンスを作成
@@ -46,31 +47,18 @@ func main() {
 		randNum := rand.Intn(3) + 1 // 1~3
 		randStr := strconv.Itoa(randNum)
 
-		// ドキュメント全件取得
-		iter := client.Collection("recipes").Documents(ctx)
-		var res interface{}
-		for {
-
-			// 1件ずつ処理していく
-			doc, err := iter.Next()
-			if err == iterator.Done {
-				break
-			}
-			if err != nil {
-				log.Fatalf("Failed to iterate: %v", err)
-			}
-
-			// 生成された乱数とIDを照合して1件のドキュメントを返却
-			if doc.Ref.ID == randStr {
-				res = doc.Data()
-			}
+		// 生成した乱数をIDに持つドキュメントを1件取得
+		recipe, err := client.Collection("recipes").Doc(randStr).Get(ctx)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err)
 		}
 
 		// ドキュメントのnilチェック
-		if res == nil {
+		if recipe == nil {
 			return c.JSON(http.StatusNotFound, "ドキュメントが見つかりませんでした")
 		}
 
+		res := recipe.Data()
 		return c.JSON(http.StatusOK, res)
 	})
 
