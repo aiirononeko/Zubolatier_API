@@ -3,8 +3,11 @@ package main
 import (
 	"context"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	firebase "firebase.google.com/go"
 	"github.com/labstack/echo"
@@ -31,13 +34,24 @@ func main() {
 	// サーバーのインスタンスを作成
 	e := echo.New()
 
-	// ルーティング設定
-	e.GET("/all", func(c echo.Context) error {
+	/**
+	 * 一旦全件取得してから生成した乱数と照合するようになっているので、
+	 * 全件取得しなくても良いようにリファクタリングする必要あり.
+	 */
+	// ドキュメントをランダムに1件取得
+	e.GET("/get", func(c echo.Context) error {
 
-		// 全レコード取得
+		// 乱数生成
+		rand.Seed(time.Now().UnixNano())
+		randNum := rand.Intn(3) + 1 // 1~3
+		randStr := strconv.Itoa(randNum)
+
+		// ドキュメント全件取得
 		iter := client.Collection("recipes").Documents(ctx)
 		var res interface{}
 		for {
+
+			// 1件ずつ処理していく
 			doc, err := iter.Next()
 			if err == iterator.Done {
 				break
@@ -45,7 +59,16 @@ func main() {
 			if err != nil {
 				log.Fatalf("Failed to iterate: %v", err)
 			}
-			res = doc.Data()
+
+			// 生成された乱数とIDを照合して1件のドキュメントを返却
+			if doc.Ref.ID == randStr {
+				res = doc.Data()
+			}
+		}
+
+		// ドキュメントのnilチェック
+		if res == nil {
+			return c.JSON(http.StatusNotFound, "ドキュメントが見つかりませんでした")
 		}
 
 		return c.JSON(http.StatusOK, res)
@@ -53,5 +76,4 @@ func main() {
 
 	// サーバー起動
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
-
 }
