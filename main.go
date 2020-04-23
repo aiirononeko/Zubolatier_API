@@ -44,7 +44,7 @@ func main() {
 
 		// 乱数生成
 		rand.Seed(time.Now().UnixNano())
-		randNum := rand.Intn(3) + 1 // 1~3
+		randNum := rand.Intn(7) + 1 // 1~7
 		randStr := strconv.Itoa(randNum)
 
 		// 生成した乱数をIDに持つドキュメントを1件取得
