@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -15,46 +16,32 @@ import (
 	"google.golang.org/api/option"
 )
 
-type Settings struct {
-	Type                    string `json="type"`
-	ProjectId               string `json="project_id"`
-	PrivateKeyId            string `json="private_key_id"`
-	PrivateKey              string `json="private_key"`
-	ClientEmail             string `json="client_email"`
-	ClientId                string `json="client_id"`
-	AuthUri                 string `json="auth_uri"`
-	TokenUri                string `json="token_uri"`
-	AuthProviderX509CertUrl string `json="auth_provider_x509_cert_url"`
-	ClientX509CertUrl       string `json="client_x509_cert_url"`
-}
-
 func main() {
 
-	s := Settings{
-		Type:                    os.Getenv("TYPE"),
-		ProjectId:               os.Getenv("PROJECT_ID"),
-		PrivateKeyId:            os.Getenv("PRIVATE_KEY_ID"),
-		PrivateKey:              os.Getenv("PRIVATE_KEY"),
-		ClientEmail:             os.Getenv("CLIENT_EMAIL"),
-		ClientId:                os.Getenv("CLIENT_ID"),
-		AuthUri:                 os.Getenv("AUTH_URI"),
-		TokenUri:                os.Getenv("TOKEN_URI"),
-		AuthProviderX509CertUrl: os.Getenv("AUTH_PROVIDER_X590_CERT_URL"),
-		ClientX509CertUrl:       os.Getenv("CLIENT_X509_CERT_URL"),
+	// アカウント情報JSON生成
+	settingsMap := map[string]interface{}{
+		"type":                        os.Getenv("TYPE"),
+		"project_id":                  os.Getenv("PROJECT_ID"),
+		"private_key_id":              os.Getenv("PRIVATE_KEY_ID"),
+		"private_key":                 os.Getenv("PRIVATE_KEY"),
+		"client_email":                os.Getenv("CLIENT_EMAIL"),
+		"client_id":                   os.Getenv("CLIENT_ID"),
+		"auth_uri":                    os.Getenv("AUTH_URI"),
+		"token_uri":                   os.Getenv("TOKEN_URI"),
+		"auth_provider_x509_cert_url": os.Getenv("AuthProviderX509CertUrl"),
+		"client_x509_cert_url":        os.Getenv("ClientX509CertUrl"),
 	}
 
-	log.Printf(os.Getenv("PROJECT_ID"))
-
-	// アカウント情報JSON生成
-	jsonBytes, err := json.Marshal(s)
+	settings, err := json.Marshal(settingsMap)
 	if err != nil {
-		log.Fatalln(err)
+		fmt.Println(err)
+		return
 	}
 
 	// Cloud FireStoreの初期化
 	ctx := context.Background()
 	// sa := option.WithCredentialsFile("path/to/serviceAccount.json")
-	sa := option.WithCredentialsJSON(jsonBytes)
+	sa := option.WithCredentialsJSON(settings)
 
 	app, err := firebase.NewApp(ctx, nil, sa)
 	if err != nil {
