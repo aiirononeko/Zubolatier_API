@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"math/rand"
 	"net/http"
@@ -14,11 +15,41 @@ import (
 	"google.golang.org/api/option"
 )
 
+type Settings struct {
+	Type                    string `json="type"`
+	ProjectId               string `json="project_id"`
+	PrivateKeyId            string `json="private_key_id"`
+	PrivateKey              string `json="private_key"`
+	ClientEmail             string `json="client_email"`
+	ClientId                string `json="client_id"`
+	AuthUri                 string `json="auth_uri"`
+	TokenUri                string `json="token_uri"`
+	AuthProviderX509CertUrl string `json="auth_provider_x509_cert_url"`
+	ClientX509CertUrl       string `json="client_x509_cert_url"`
+}
+
 func main() {
+
+	s := Settings{
+		Type:                    os.Getenv("TYPE"),
+		ProjectId:               os.Getenv("PROJECT_ID"),
+		PrivateKeyId:            os.Getenv("PRIVATE_KEY_ID"),
+		PrivateKey:              os.Getenv("PRIVATE_KEY"),
+		ClientEmail:             os.Getenv("CLIENT_EMAIL"),
+		ClientId:                os.Getenv("CLIENT_ID"),
+		AuthUri:                 os.Getenv("AUTH_URI"),
+		TokenUri:                os.Getenv("TOKEN_URI"),
+		AuthProviderX509CertUrl: os.Getenv("AUTH_PROVIDER_X590_CERT_URL"),
+		ClientX509CertUrl:       os.Getenv("CLIENT_X509_CERT_URL"),
+	}
+
+	// アカウント情報JSON生成
+	jsonBytes, err := json.Marshal(s)
 
 	// Cloud FireStoreの初期化
 	ctx := context.Background()
-	sa := option.WithCredentialsFile("path/to/serviceAccount.json")
+	// sa := option.WithCredentialsFile("path/to/serviceAccount.json")
+	sa := option.WithCredentialsJSON(jsonBytes)
 
 	app, err := firebase.NewApp(ctx, nil, sa)
 	if err != nil {
