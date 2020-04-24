@@ -17,7 +17,7 @@ import (
 
 type Settings struct {
 	Type                    string `json="type"`
-	ProjectId               string `json="project_id"`
+	project_id              string `json="project_id"`
 	PrivateKeyId            string `json="private_key_id"`
 	PrivateKey              string `json="private_key"`
 	ClientEmail             string `json="client_email"`
@@ -32,7 +32,7 @@ func main() {
 
 	s := Settings{
 		Type:                    os.Getenv("TYPE"),
-		ProjectId:               os.Getenv("PROJECT_ID"),
+		project_id:              os.Getenv("PROJECT_ID"),
 		PrivateKeyId:            os.Getenv("PRIVATE_KEY_ID"),
 		PrivateKey:              os.Getenv("PRIVATE_KEY"),
 		ClientEmail:             os.Getenv("CLIENT_EMAIL"),
@@ -45,6 +45,9 @@ func main() {
 
 	// アカウント情報JSON生成
 	jsonBytes, err := json.Marshal(s)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	// Cloud FireStoreの初期化
 	ctx := context.Background()
