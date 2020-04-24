@@ -17,7 +17,7 @@ import (
 
 type Settings struct {
 	Type                    string `json="type"`
-	project_id              string `json="project_id"`
+	ProjectId               string `json="project_id"`
 	PrivateKeyId            string `json="private_key_id"`
 	PrivateKey              string `json="private_key"`
 	ClientEmail             string `json="client_email"`
@@ -32,7 +32,7 @@ func main() {
 
 	s := Settings{
 		Type:                    os.Getenv("TYPE"),
-		project_id:              os.Getenv("PROJECT_ID"),
+		ProjectId:               "zubolatier",
 		PrivateKeyId:            os.Getenv("PRIVATE_KEY_ID"),
 		PrivateKey:              os.Getenv("PRIVATE_KEY"),
 		ClientEmail:             os.Getenv("CLIENT_EMAIL"),
