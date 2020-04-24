@@ -32,7 +32,7 @@ func main() {
 
 	s := Settings{
 		Type:                    os.Getenv("TYPE"),
-		ProjectId:               "zubolatier",
+		ProjectId:               os.Getenv("PROJECT_ID"),
 		PrivateKeyId:            os.Getenv("PRIVATE_KEY_ID"),
 		PrivateKey:              os.Getenv("PRIVATE_KEY"),
 		ClientEmail:             os.Getenv("CLIENT_EMAIL"),
@@ -42,6 +42,8 @@ func main() {
 		AuthProviderX509CertUrl: os.Getenv("AUTH_PROVIDER_X590_CERT_URL"),
 		ClientX509CertUrl:       os.Getenv("CLIENT_X509_CERT_URL"),
 	}
+
+	log.Printf(os.Getenv("PROJECT_ID"))
 
 	// アカウント情報JSON生成
 	jsonBytes, err := json.Marshal(s)
