@@ -2,9 +2,7 @@ package main
 
 import (
 	"context"
-	"crypto/x509"
 	"encoding/json"
-	"encoding/pem"
 	"fmt"
 	"log"
 	"math/rand"
@@ -20,15 +18,12 @@ import (
 
 func main() {
 
-	block, _ := pem.Decode([]byte(os.Getenv("PRIVATE_KEY")))
-	key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-
 	// アカウント情報JSON生成
 	settingsMap := map[string]interface{}{
 		"type":                        os.Getenv("TYPE"),
 		"project_id":                  os.Getenv("PROJECT_ID"),
 		"private_key_id":              os.Getenv("PRIVATE_KEY_ID"),
-		"private_key":                 key,
+		"private_key":                 os.Getenv("PRIVATE_KEY"),
 		"client_email":                os.Getenv("CLIENT_EMAIL"),
 		"client_id":                   os.Getenv("CLIENT_ID"),
 		"auth_uri":                    os.Getenv("AUTH_URI"),
