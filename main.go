@@ -28,8 +28,8 @@ func main() {
 		"client_id":                   os.Getenv("CLIENT_ID"),
 		"auth_uri":                    os.Getenv("AUTH_URI"),
 		"token_uri":                   os.Getenv("TOKEN_URI"),
-		"auth_provider_x509_cert_url": os.Getenv("AuthProviderX509CertUrl"),
-		"client_x509_cert_url":        os.Getenv("ClientX509CertUrl"),
+		"auth_provider_x509_cert_url": os.Getenv("AUTH_PROVIDER_X509_CERT_URL"),
+		"client_x509_cert_url":        os.Getenv("CLIENT_X509_CERT_URL"),
 	}
 
 	settings, err := json.Marshal(settingsMap)
