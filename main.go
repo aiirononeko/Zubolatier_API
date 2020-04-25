@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
@@ -19,29 +17,29 @@ import (
 func main() {
 
 	// アカウント情報JSON生成
-	settingsMap := map[string]interface{}{
-		"type":                        os.Getenv("TYPE"),
-		"project_id":                  os.Getenv("PROJECT_ID"),
-		"private_key_id":              os.Getenv("PRIVATE_KEY_ID"),
-		"private_key":                 os.Getenv("PRIVATE_KEY"),
-		"client_email":                os.Getenv("CLIENT_EMAIL"),
-		"client_id":                   os.Getenv("CLIENT_ID"),
-		"auth_uri":                    os.Getenv("AUTH_URI"),
-		"token_uri":                   os.Getenv("TOKEN_URI"),
-		"auth_provider_x509_cert_url": os.Getenv("AUTH_PROVIDER_X509_CERT_URL"),
-		"client_x509_cert_url":        os.Getenv("CLIENT_X509_CERT_URL"),
-	}
+	// settingsMap := map[string]interface{}{
+	// 	"type":                        os.Getenv("TYPE"),
+	// 	"project_id":                  os.Getenv("PROJECT_ID"),
+	// 	"private_key_id":              os.Getenv("PRIVATE_KEY_ID"),
+	// 	"private_key":                 os.Getenv("PRIVATE_KEY"),
+	// 	"client_email":                os.Getenv("CLIENT_EMAIL"),
+	// 	"client_id":                   os.Getenv("CLIENT_ID"),
+	// 	"auth_uri":                    os.Getenv("AUTH_URI"),
+	// 	"token_uri":                   os.Getenv("TOKEN_URI"),
+	// 	"auth_provider_x509_cert_url": os.Getenv("AUTH_PROVIDER_X509_CERT_URL"),
+	// 	"client_x509_cert_url":        os.Getenv("CLIENT_X509_CERT_URL"),
+	// }
 
-	settings, err := json.Marshal(settingsMap)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	// settings, err := json.Marshal(settingsMap)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return
+	// }
 
 	// Cloud FireStoreの初期化
 	ctx := context.Background()
-	// sa := option.WithCredentialsFile("path/to/serviceAccount.json")
-	sa := option.WithCredentialsJSON(settings)
+	sa := option.WithCredentialsFile("path/to/serviceAccount.json")
+	// sa := option.WithCredentialsJSON(settings)
 
 	app, err := firebase.NewApp(ctx, nil, sa)
 	if err != nil {
