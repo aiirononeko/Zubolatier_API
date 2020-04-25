@@ -40,6 +40,7 @@ func main() {
 
 	// Cloud FireStoreの初期化
 	ctx := context.Background()
+	// sa := option.WithCredentialsFile("path/to/serviceAccount.json")
 	sa := option.WithCredentialsJSON(settings)
 
 	app, err := firebase.NewApp(ctx, nil, sa)
