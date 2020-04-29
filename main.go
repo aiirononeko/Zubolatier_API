@@ -17,7 +17,7 @@ func main() {
 
 	// Cloud FireStoreの初期化
 	ctx := context.Background()
-	conf := &firebase.Config{ProjectID: "Zubolatier"}
+	conf := &firebase.Config{ProjectID: "zubolatier"}
 	app, err := firebase.NewApp(ctx, conf)
 	if err != nil {
 		log.Fatalln(err)
